@@ -1,9 +1,9 @@
 "use strict";
-let Helper = require("helper-clockmaker");
+let Helper = require("helper-clockmaker").Helper;
 let debug = require("debug")("ReRank");
 
-let similarity = require("sentence-similarity");
-let similarityScore = similarity.similarityScore;
+let {sentenceSimilarity, similarityScore} = require("sentence-similarity");
+let similarity = sentenceSimilarity
 let deepcopy = require("clone");
 
 //Compare the complete score

@@ -4,7 +4,6 @@ let Helper = require("helper-clockmaker");
 let Logger = Helper.Logger("Phrasex");
 
 let reRank = require("./ReRank.js").reRank;
-let GetConfigValues = Helper.GetConfigValues;
 let PhraseMatcher = require("./PhraseMatcher.js");
 let PhraseHitsFilterFactory = require("./PhraseHitsFilter.js");
 let slotFiller = require("slot-filler");
