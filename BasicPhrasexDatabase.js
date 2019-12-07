@@ -1,10 +1,11 @@
 "use strict";
 
-let Logger = require("sb/etc/Logger.js")("BasicPhrasexDatabase");
-let PhraseDatabase = require("sb/phrasex/PhraseDatabase.js");
+//let Logger = require("sb/etc/Logger.js")("BasicPhrasexDatabase");
+let PhraseDatabase = require("PhraseDatabase.js");
 let jsonFile = require("jsonfile");
 let debug = require("debug")("BasicPhrasexDatabase");
 let Helper = require("sb/etc/Helper.js");
+let Logger = Helper.Logger("BasicPhrasexDatabase")
 
 module.exports = {
   expandFiles(filename) {

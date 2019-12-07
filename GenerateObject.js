@@ -1,7 +1,8 @@
 "use strict";
 
-let Logger = require("sb/etc/Logger.js")("GenerateObject");
-let Helper = require("sb/etc/Helper.js");
+//let Logger = require("sb/etc/Logger.js")("GenerateObject");
+let Helper = require("helper-clockmaker");
+let Logger = Helper.Logger("GenerateObject")
 let deepcopy = require("clone");
 let debug = require("debug")("GenerateObject");
 

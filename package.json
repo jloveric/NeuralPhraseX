@@ -1,36 +1,42 @@
 {
-  "name": "phrasex",
+  "name": "neuralphrasex",
   "version": "1.0.0",
   "description": "Matches a given phrase to the best match in a database and determines the wildcards using a slot filler.  This is like a regex, but much more flexible for phrase matching and alignment.",
   "main": "index.js",
   "scripts": {
-    "test": "node jasmine-runner.js",
+    "test": "jest",
     "pretty": "prettier --write --tab-width 2 \"**/*.js\"",
     "precommit": "lint-staged && npm test"
   },
+  "jest": {
+    "verbose": true
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jloveric/Phrasex.git"
+    "url": "git+https://github.com/jloveric/NeuralPhraseX.git"
   },
   "keywords": [
     "regex",
     "misspellings",
     "slot",
     "filling",
-    "elasticsearch",
+    "tensorflow",
     "phrase",
-    "matching"
+    "matching",
+    "embeddings",
+    "knn"
   ],
   "author": "John Loverich",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jloveric/Phrasex/issues"
+    "url": "https://github.com/jloveric/NeuralPhraseX/issues"
   },
-  "homepage": "https://github.com/jloveric/Phrasex#readme",
+  "homepage": "https://github.com/jloveric/NeuralPhraseX#readme",
   "devDependencies": {
     "husky": "^3.0.9",
     "jasmine": "^3.5.0",
     "jasmine-spec-reporter": "^4.2.1",
+    "jest": "^24.9.0",
     "lint-staged": "^9.4.2",
     "prettier": "^1.18.2"
   },
@@ -46,5 +52,8 @@
       "npm run pretty",
       "git add"
     ]
+  },
+  "dependencies": {
+    "helper-clockmaker": "^1.0.11"
   }
 }
