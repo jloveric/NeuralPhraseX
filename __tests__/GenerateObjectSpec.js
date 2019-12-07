@@ -10,6 +10,8 @@ describe("Testing GenerateObject", function() {
     let wc = { item: "tuna", column: "aisle", value: "1" };
 
     let elem = go.expandElement(wc, description);
+    console.log('elem', elem)
+
     expect(elem.val[0]).toEqual("tuna");
     expect(elem.val[1]).toEqual("aisle");
 

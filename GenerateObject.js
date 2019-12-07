@@ -1,8 +1,8 @@
 "use strict";
 
 //let Logger = require("sb/etc/Logger.js")("GenerateObject");
-let Helper = require("helper-clockmaker");
-let Logger = Helper.Logger("GenerateObject")
+let Helper = require("helper-clockmaker").Helper;
+let Logger = require("helper-clockmaker").Logger("GenerateObject")
 let deepcopy = require("clone");
 let debug = require("debug")("GenerateObject");
 
@@ -83,7 +83,8 @@ class GenerateObject {
     for (let i = 0; i < lhs.length; i++) {
       let wcColumn = lhs[i].match(Helper.betweenParentheses);
       let exactColumn = lhs[i];
-
+      
+      debug('lhs[i]',lhs[i])
       debug("wc", wc);
       debug("wcColumn", wcColumn);
       debug("exactColumn", exactColumn);

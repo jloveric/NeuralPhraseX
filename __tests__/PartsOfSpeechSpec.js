@@ -1,7 +1,7 @@
 "use strict";
 
 let PartsOfSpeech = require("../PartsOfSpeech.js");
-
+let debug = require('debug')('PartsOfSpeechSpec')
 describe("PartsOfSpeech Class", function() {
   it("Should tag the parts of speech", function() {
     let pos = new PartsOfSpeech();
@@ -9,6 +9,7 @@ describe("PartsOfSpeech Class", function() {
     let phrase = "do you have any cat food";
 
     let ans = pos.getPartsOfSpeech(phrase);
+    debug('ans', ans)
     let nounScore = pos.getNounScore(ans);
     expect(nounScore).toBe(1.0 / 3.0);
     console.log("ans", ans, nounScore);
