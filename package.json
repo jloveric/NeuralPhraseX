@@ -54,6 +54,7 @@
     ]
   },
   "dependencies": {
+    "clone": "^2.1.2",
     "helper-clockmaker": "^1.0.11"
   }
 }

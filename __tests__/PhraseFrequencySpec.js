@@ -1,6 +1,6 @@
 "use strict";
 
-let PhraseFrequency = require("sb/phrasex/PhraseFrequency.js");
+let PhraseFrequency = require("../PhraseFrequency.js");
 
 describe("helper", function() {
   it("Should test PhraseFrequency for a single phrase", function() {

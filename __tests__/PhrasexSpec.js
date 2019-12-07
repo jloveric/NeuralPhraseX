@@ -1,7 +1,7 @@
 "use strict";
 
-let Phrasex = require("sb/phrasex/Phrasex.js");
-let slotFiller = require("sb/phrasex/SlotFiller.js");
+let Phrasex = require("Phrasex.js");
+let slotFiller = require("SlotFiller");
 let UserData = require("sb/user/UserData.js");
 
 describe("Testing Phrasex", function() {
