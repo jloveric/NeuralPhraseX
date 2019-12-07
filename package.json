@@ -1,0 +1,50 @@
+{
+  "name": "phrasex",
+  "version": "1.0.0",
+  "description": "Matches a given phrase to the best match in a database and determines the wildcards using a slot filler.  This is like a regex, but much more flexible for phrase matching and alignment.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node jasmine-runner.js",
+    "pretty": "prettier --write --tab-width 2 \"**/*.js\"",
+    "precommit": "lint-staged && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jloveric/Phrasex.git"
+  },
+  "keywords": [
+    "regex",
+    "misspellings",
+    "slot",
+    "filling",
+    "elasticsearch",
+    "phrase",
+    "matching"
+  ],
+  "author": "John Loverich",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jloveric/Phrasex/issues"
+  },
+  "homepage": "https://github.com/jloveric/Phrasex#readme",
+  "devDependencies": {
+    "husky": "^3.0.9",
+    "jasmine": "^3.5.0",
+    "jasmine-spec-reporter": "^4.2.1",
+    "lint-staged": "^9.4.2",
+    "prettier": "^1.18.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test",
+      "pre-push": "npm test",
+      "...": "..."
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "npm run pretty",
+      "git add"
+    ]
+  }
+}
