@@ -1,11 +1,7 @@
 "use strict";
 
-let Logger = require("sb/etc/Logger.js")("PhraseMatcher");
 let es = require("elasticsearch");
-let levenshtein = require("fast-levenshtein");
-let Helper = require("sb/etc/Helper.js");
-let reRank = require("sb/phrasex/ReRank.js").reRank;
-let GetConfigValues = require("sb/etc/GetConfigValues.js");
+let GetConfigValues = require("helper-clockmaker").GetConfigValues
 
 //TODO: Not sure this does anything important anymore.
 class PhraseMatcher {

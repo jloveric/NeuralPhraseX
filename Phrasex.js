@@ -1,16 +1,13 @@
 "use strict";
 
-let Logger = require("sb/etc/Logger.js")("Phrasex");
-let es = require("elasticsearch");
-let levenshtein = require("fast-levenshtein");
-let Helper = require("sb/etc/Helper.js");
-let reRank = require("sb/phrasex/ReRank.js").reRank;
-let GetConfigValues = require("sb/etc/GetConfigValues.js");
-let PhraseMatcher = require("sb/phrasex/PhraseMatcher.js");
-let PhraseHitsFilterFactory = require("sb/phrasex/PhraseHitsFilter.js");
-let similarity = require("sb/phrasex/SentenceSimilarity.js");
-let similarityScore = require("sb/phrasex/SimilarityScore.js");
-let slotFiller = require("sb/phrasex/SlotFiller.js");
+let Helper = require("helper-clockmaker");
+let Logger = Helper.Logger("Phrasex");
+
+let reRank = require("./ReRank.js").reRank;
+let GetConfigValues = Helper.GetConfigValues;
+let PhraseMatcher = require("./PhraseMatcher.js");
+let PhraseHitsFilterFactory = require("./PhraseHitsFilter.js");
+let slotFiller = require("slot-filler");
 
 let debug = require("debug")("Phrasex");
 

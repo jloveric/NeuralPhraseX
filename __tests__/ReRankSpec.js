@@ -1,11 +1,9 @@
 "use strict";
 
-let frequencyRank = require("sb/phrasex/ReRank.js").frequencyRank;
-let PhraseFrequency = require("sb/phrasex/PhraseFrequency.js");
-let reRank = require("sb/phrasex/ReRank.js").reRank;
-let alignmentRank = require("sb/phrasex/ReRank.js").alignmentRank;
-let combineRank = require("sb/phrasex/ReRank.js").combineRank;
-let boostSort = require("sb/phrasex/ReRank.js").boostSort;
+
+let PhraseFrequency = require("../PhraseFrequency.js");
+let {frequencyRank, reRank, alignmentRank, combineRank, boostSort} = require("../ReRank.js");
+
 
 let hits = {
   total: 26,

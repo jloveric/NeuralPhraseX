@@ -1,8 +1,8 @@
 "use strict";
 
-let Phrasex = require("Phrasex.js");
+let Phrasex = require("../Phrasex.js");
 let slotFiller = require("SlotFiller");
-let UserData = require("sb/user/UserData.js");
+let UserData = require("../UserData.js");
 
 describe("Testing Phrasex", function() {
   it("Should make guesses with ambiguous data", function(done) {

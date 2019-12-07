@@ -1,11 +1,9 @@
 "use strict";
-let Helper = require("sb/etc/Helper.js");
+let Helper = require("helper-clockmaker");
 let debug = require("debug")("ReRank");
-let ld = require("damerau-levenshtein");
-let Logger = require("sb/etc/Logger.js")("ReRank");
 
-let similarity = require("sb/phrasex/SentenceSimilarity.js");
-let similarityScore = require("sb/phrasex/SimilarityScore.js");
+let similarity = require("sentence-similarity");
+let similarityScore = similarity.similarityScore;
 let deepcopy = require("clone");
 
 //Compare the complete score

@@ -1,6 +1,6 @@
 "use strict";
 
-let PartsOfSpeech = require("sb/phrasex/PartsOfSpeech.js");
+let PartsOfSpeech = require("../PartsOfSpeech.js");
 
 describe("PartsOfSpeech Class", function() {
   it("Should tag the parts of speech", function() {
