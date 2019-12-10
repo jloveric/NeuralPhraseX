@@ -1,4 +1,4 @@
-{
+module.exports = {
   "data": [
 		{
 			"phrase": [

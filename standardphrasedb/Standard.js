@@ -1,5 +1,5 @@
-{
-	"include" : ["Definitions.json","Where.json","What.json","Swear.json","WherePrep.json"],
+module.exports = {
+	
 	"data": [
 		{
 			"phrase" : ["What did I say", "What do you think I said","What was I talking about?"],

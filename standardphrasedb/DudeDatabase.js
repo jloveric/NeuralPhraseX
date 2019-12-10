@@ -1,4 +1,4 @@
-{
+module.exports = {
 	"data": [
         {
 			"phrase": ["What do you do for a living",

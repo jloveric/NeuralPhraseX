@@ -1,9 +1,6 @@
 "use strict";
-
-let GetConfigValues = require("sb/etc/GetConfigValues.js");
-let MongoHelper = require("sb/extdb/MongoHelper.js");
-let Logger = require("sb/etc/Logger.js")("PhraseDatabase");
-let Helper = require("sb/etc/Helper.js");
+let {Helper} = require('helper-clockmaker')
+let Logger = require("helper-clockmaker").Logger("PhraseDatabase");
 let debug = require("debug")("PhraseDatabase");
 
 /**
@@ -15,11 +12,10 @@ let debug = require("debug")("PhraseDatabase");
  */
 class PhraseDatabase {
   constructor() {
-    this.mongod = new MongoHelper();
-    this.gf = new GetConfigValues();
-    this.phraseTable = "phrase";
+    this.phraseTableName = "phrase";
     this.count = 0;
     this.groupIndex = 0;
+    this.phraseTable = []
   }
 
   close() {}
@@ -30,41 +26,7 @@ class PhraseDatabase {
    * options = {phraseTable : the name of the table in the 'phrasedb' directory one is interested in.}
    */
   initialize(options) {
-    if (options.phraseTable) {
-      this.phraseTable = options.phraseTable;
-    }
-
-    let np = this.mongod
-      .initialize("phrasedb", this.gf.mongodb.url)
-      .then(db => {
-        this.db = db;
-        return Promise.resolve(true);
-      })
-      .catch(() => {
-        return Promise.reject();
-      });
-
-    return np;
-  }
-
-  /**
-   * Drop the given collection in the 'phrase' database
-   * @param tableName is the table to drop.
-   */
-  dropTable(tableName) {
-    Logger.debug("Stepping into deleteTable");
-    let np = new Promise((resolve, reject) => {
-      this.db.collection(tableName).remove({}, err => {
-        if (err) {
-          Logger.error("deleteTable error", err);
-          reject();
-        } else {
-          Logger.info("Removed table", tableName);
-          resolve(true);
-        }
-      });
-    });
-    return np;
+    return Promise.resolve()
   }
 
   /**
@@ -84,7 +46,7 @@ class PhraseDatabase {
   getPhraseMap(phraseType) {
     Logger.debug("PhraseDatabase inside getPhraseMap");
     let np = new Promise((resolve, reject) => {
-      let table = this.db.collection(this.phraseTable);
+      let table = this.db.collection(this.phraseTableName);
 
       table.find({ phraseType: phraseType }).toArray((err, documents) => {
         if (err) {
@@ -119,24 +81,11 @@ class PhraseDatabase {
    * that match the following search.
    */
   getList(phraseType, implies) {
-    Logger.debug("Inside PhraseDatabase getList");
-    let np = new Promise((resolve, reject) => {
-      let table = this.db.collection(this.phraseTable);
-
-      table
-        .find({ phraseType: phraseType, implies: implies.sort() })
-        .toArray((err, documents) => {
-          if (err) {
-            Logger.error(err);
-            reject();
-          } else {
-            Logger.debug("PhraseDatabase getting documents", documents);
-            resolve(documents);
-          }
-        });
-    });
-
-    return np;
+    //filter list for phraseType and implies, this should actually be
+    //be cached.
+    this.phraseTable.filter((element)=>{
+      return (element.phraseType == phraseType) && element.implies.includes(implies)
+    })
   }
 
   /**
@@ -172,7 +121,7 @@ class PhraseDatabase {
     if (obj.phrase) {
       //If it has a phrase block
       for (let i = 0; i < obj.phrase.length; i++) {
-        let np = this.addPhrase({
+        let no = this.addPhrase({
           phrase: obj.phrase[i],
           phraseType: obj.phraseType,
           implies: obj.implies,
@@ -180,7 +129,7 @@ class PhraseDatabase {
           meta: obj.meta,
           storage: storage.phrase
         });
-        pList.push(np);
+        pList.push(no);
       }
     }
 
@@ -203,15 +152,15 @@ class PhraseDatabase {
         newObj.phrase = obj.response[i];
         newObj.continue = obj.continue ? obj.continue : [obj.response[i]];
         newObj.storage = storage.response;
-        let np = this.addPhrase(Object.assign({}, newObj));
-        pList.push(np);
+        let no = this.addPhrase(Object.assign({}, newObj));
+        pList.push(no);
       }
     }
 
     //Again, increment groupIndex for the next group
     this.groupIndex++;
 
-    return Promise.all(pList);
+    return pList;
   }
 
   //Create to sentences, one where terms in parentheses are ignored and
@@ -235,21 +184,8 @@ class PhraseDatabase {
   }
 
   insertIntoPhraseTable(val) {
-    let np = new Promise((resolve, reject) => {
-      let table = this.db.collection(this.phraseTable);
-
-      table.insert(val, { w: 1 }, (err, rec) => {
-        if (err) {
-          Logger.error("Phrase insertion failed", err);
-          reject();
-        } else {
-          this.count++;
-          //console.log('count',this.count)
-          resolve();
-        }
-      });
-    });
-    return np;
+    this.phraseTable.push(val)
+    return this.phraseTable
   }
 
   /**
