@@ -591,7 +591,31 @@ module.exports = {
 			"meta": {
 				"group": "featureOfThing"
 			}
+        },
+        {
+            exampleWildcards : {action : ["speak"], item : ["Sarah"]},
+			"phrase": [
+				"May I (action) with (item)"
+			],
+			"response": [
+				"Yes you may (action) with (item)"
+			],
+			"continue": [
+				"(item)"
+			],
+			"phraseType": "query",
+			"implies": [
+				"askingPermission"
+			],
+			"target": [
+				"item"
+			],
+			"storage": "standardExists",
+			"meta": {
+				"group": "askingPermission"
+			}
 		}
+
 
 	]
 }

@@ -1,9 +1,7 @@
 "use strict";
 
-
 let PhraseFrequency = require("../PhraseFrequency.js");
-let {frequencyRank, reRank, alignmentRank, combineRank, boostSort} = require("../ReRank.js");
-
+let {frequencyRank, reRank, alignmentRank, combineRank} = require("../ReRank.js");
 
 let hits = {
   total: 26,
@@ -14,7 +12,7 @@ let hits = {
       _type: "pub",
       _id: "11",
       _score: 2.6238284,
-      _source: {
+      key: {
         phrase: "Do you have any (item)",
         phraseType: "query",
         implies: ["existence"],
@@ -29,7 +27,7 @@ let hits = {
       _type: "pub",
       _id: "14",
       _score: 2.6238284,
-      _source: {
+      key: {
         phrase: "Do you have (item)",
         phraseType: "query",
         implies: ["existence"],
@@ -44,7 +42,7 @@ let hits = {
       _type: "pub",
       _id: "77",
       _score: 2.6238284,
-      _source: {
+      key: {
         phrase: "What (item) do you have",
         phraseType: "query",
         implies: ["item"],
@@ -59,7 +57,7 @@ let hits = {
       _type: "pub",
       _id: "87",
       _score: 2.6238284,
-      _source: {
+      key: {
         phrase: "What do you have?",
         phraseType: "query",
         implies: ["item"],
@@ -74,7 +72,7 @@ let hits = {
       _type: "pub",
       _id: "76",
       _score: 1.9678714,
-      _source: {
+      key: {
         phrase: "What kind of (item) do you have",
         phraseType: "query",
         implies: ["item"],
@@ -91,7 +89,7 @@ let hits = {
       _type: "pub",
       _id: "12",
       _score: 1.0650656,
-      _source: {
+      key: {
         phrase: "Do you sell any (item)",
         phraseType: "query",
         implies: ["existence"],
@@ -106,7 +104,7 @@ let hits = {
       _type: "pub",
       _id: "15",
       _score: 1.0650656,
-      _source: {
+      key: {
         phrase: "Do you sell (item)",
         phraseType: "query",
         implies: ["existence"],
@@ -121,7 +119,7 @@ let hits = {
       _type: "pub",
       _id: "73",
       _score: 0.665666,
-      _source: {
+      key: {
         phraseType: "tell",
         implies: ["person"],
         target: ["name"],
@@ -140,7 +138,7 @@ let hits = {
       _type: "pub",
       _id: "109",
       _score: 0.665666,
-      _source: {
+      key: {
         phraseType: "tell",
         implies: ["greeting"],
         target: ["name"],
@@ -158,7 +156,7 @@ let hits = {
       _type: "pub",
       _id: "78",
       _score: 0.42759585,
-      _source: {
+      key: {
         phraseType: "tell",
         implies: ["item"],
         target: ["item"],
@@ -182,7 +180,7 @@ let hits2 = {
       _type: "pub",
       _id: "11",
       _score: 2.6238284,
-      _source: {
+      key: {
         phrase: "Do you have any (item)",
         phraseType: "query",
         implies: ["existence"],
@@ -197,7 +195,7 @@ let hits2 = {
       _type: "pub",
       _id: "14",
       _score: 2.6238284,
-      _source: {
+      key: {
         phrase: "any time",
         phraseType: "query",
         implies: ["existence"],
@@ -212,7 +210,7 @@ let hits2 = {
       _type: "pub",
       _id: "14",
       _score: 2.6238284,
-      _source: {
+      key: {
         phrase: "any (item)",
         phraseType: "query",
         implies: ["existence"],
@@ -234,7 +232,7 @@ let hits3 = {
       _type: "pub",
       _id: "11",
       _score: 2.6238284,
-      _source: {
+      key: {
         phrase: "Do you have any (item)",
         phraseType: "query",
         implies: ["existence"],
@@ -249,7 +247,7 @@ let hits3 = {
       _type: "pub",
       _id: "14",
       _score: 2.6238284,
-      _source: {
+      key: {
         phrase: "Do you have (item)",
         phraseType: "query",
         implies: ["existence"],
@@ -264,7 +262,7 @@ let hits3 = {
       _type: "pub",
       _id: "77",
       _score: 2.6238284,
-      _source: {
+      key: {
         phrase: "What (item) do you have",
         phraseType: "query",
         implies: ["item"],
@@ -279,7 +277,7 @@ let hits3 = {
       _type: "pub",
       _id: "87",
       _score: 2.6238284,
-      _source: {
+      key: {
         phrase: "What do you have?",
         phraseType: "query",
         implies: ["item"],
@@ -294,7 +292,7 @@ let hits3 = {
       _type: "pub",
       _id: "76",
       _score: 1.9678714,
-      _source: {
+      key: {
         phrase: "What kind of (item) do you have",
         phraseType: "query",
         implies: ["item"],
@@ -311,7 +309,7 @@ let hits3 = {
       _type: "pub",
       _id: "12",
       _score: 1.0650656,
-      _source: {
+      key: {
         phrase: "Do you sell any (item)",
         phraseType: "query",
         implies: ["existence"],
@@ -326,7 +324,7 @@ let hits3 = {
       _type: "pub",
       _id: "15",
       _score: 1.0650656,
-      _source: {
+      key: {
         phrase: "Do you sell (item)",
         phraseType: "query",
         implies: ["existence"],
@@ -342,7 +340,7 @@ let hits3 = {
       _type: "pub",
       _id: "73",
       _score: 0.665666,
-      _source: {
+      key: {
         phraseType: "tell",
         implies: ["person"],
         target: ["name"],
@@ -361,7 +359,7 @@ let hits3 = {
       _type: "pub",
       _id: "109",
       _score: 0.665666,
-      _source: {
+      key: {
         phraseType: "tell",
         implies: ["greeting"],
         target: ["name"],
@@ -379,7 +377,7 @@ let hits3 = {
       _type: "pub",
       _id: "78",
       _score: 0.42759585,
-      _source: {
+      key: {
         phraseType: "tell",
         implies: ["item"],
         target: ["item"],
@@ -400,10 +398,10 @@ describe("helper", function() {
     let pf = new PhraseFrequency();
     pf.initialize(4);
 
-    let th0 = hits.hits[0]._source;
-    let th1 = hits.hits[1]._source;
-    let th2 = hits.hits[2]._source;
-    let th3 = hits.hits[3]._source;
+    let th0 = hits.hits[0];
+    let th1 = hits.hits[1];
+    let th2 = hits.hits[2];
+    let th3 = hits.hits[3];
 
     //First build up some statistics
     for (let i = 0; i < 4; i++) {
@@ -436,7 +434,7 @@ describe("helper", function() {
 
     //let ans2 = reRank(hits.hits, "have wine", pf)
     //console.log('reRank', ans2)
-    //expect(ans._source.words).toBe('Do you have any')
+    //expect(ans.key.words).toBe('Do you have any')
   });
 
   it("Should reRank results properly 2", function() {
@@ -447,11 +445,5 @@ describe("helper", function() {
     console.log("alignment", alignment);
   });
 
-  it("Should rank the boosted terms properly", function() {
-    let boost = boostSort(hits3.hits);
-    expect(boost[0]._source.boostRank).toEqual(1);
-    expect(boost[1]._source.boostRank).toEqual(1);
-    expect(boost[2]._source.boostRank).toBeFalsy();
-    console.log("alignment", boost);
-  });
+ 
 });

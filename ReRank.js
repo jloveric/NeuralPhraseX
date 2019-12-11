@@ -56,6 +56,7 @@ function compareExactScore(a, b) {
  * the results that have boostRank defined.  Move these search
  * results to the head of the results list.
  */
+//TODO: pretty sure this is not needed anymore
 let boostSort = function(esResult) {
   let boostSet = [];
   let normalSet = [];

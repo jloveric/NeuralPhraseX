@@ -17,8 +17,9 @@ describe("Testing Phrasex", function () {
     phrasex = new Phrasex(ans)
     let res = await phrasex.initialize()
     done()
-  },100000000);
+  }, 100000000);
 
+  //TODO: Fix this by adding a new class to the Test.js
   /*it("Should make guesses with ambiguous data", async function (done) {
     
     let pList = [];
@@ -30,7 +31,6 @@ describe("Testing Phrasex", function () {
         value: "2"
       })
     
-
     await Promise.all(pList)
     done()
 
@@ -135,49 +135,46 @@ describe("Testing Phrasex", function () {
 
   }, 10000000);
 
-  /*it("Should produce reasonable scores", function(done) {
-    let phrasex = new Phrasex();
-  
+
+  //TODO: Fix this by checking the scores again.  They are different now that KNN is being used.
+  /*it("Should produce reasonable scores", async function (done) {
+
     let pList = [];
-  
+
     let userData = new UserData();
-    phrasex
-      .getWildcardsAndMatch("May I speak with hi my name is jake", [], userData)
-      .then(ans => {
-        console.log(ans);
-        expect(ans[0].confidence).toBe(1);
-        return phrasex.getWildcardsAndMatch(
-          "May I speak with jake",
-          [],
-          userData
-        );
-      })
-      .then(ans => {
-        console.log(ans);
-        expect(ans[0].confidence).toBeTruthy(1);
-        return phrasex.getWildcardsAndMatch(
-          "I may speak with jake",
-          [],
-          userData
-        );
-      })
-      .then(ans => {
-        console.log(ans);
-        expect(ans[0].confidence < 1).toBeTruthy();
-        return phrasex.getWildcardsAndMatch("Hi my name is jake", [], userData);
-      })
-      .then(ans => {
-        console.log(ans);
-        expect(ans[0].confidence).toBe(1);
-        return phrasex.getWildcardsAndMatch("my I speeek", [], userData);
-      })
-      .then(ans => {
-        console.log("---------yo-------------", ans);
-        expect(ans[0].confidence < 1.0).toBeTruthy();
-        done();
-      });
-  }, 10000);
-  
+    let ans = await phrasex.getWildcardsAndMatch("May I speak with hi my name is jake", [], userData)
+
+    console.log(ans);
+    expect(ans[0].confidence).toBe(1);
+    ans = await phrasex.getWildcardsAndMatch(
+      "May I speak with jake",
+      [],
+      userData
+    );
+
+    console.log(ans);
+    expect(ans[0].confidence).toBeTruthy(1);
+    ans = await phrasex.getWildcardsAndMatch(
+      "I may speak with jake",
+      [],
+      userData
+    );
+
+    console.log(ans);
+    expect(ans[0].confidence < 1).toBeTruthy();
+    ans = await phrasex.getWildcardsAndMatch("Hi my name is jake", [], userData);
+
+
+    console.log(ans);
+    expect(ans[0].confidence).toBe(1);
+    ans = await phrasex.getWildcardsAndMatch("my I speeek", [], userData);
+
+    console.log("---------yo-------------", ans);
+    expect(ans[0].confidence < 1.0).toBeTruthy();
+    done();
+
+  }, 10000);*/
+
   it("It should be able to fill in wildcards from older data", function() {
     let userData = new UserData();
     userData.initialize(1);
@@ -209,7 +206,7 @@ describe("Testing Phrasex", function () {
     expect(ans[0]).toBe("store");
   
     console.log(ans);
-  }, 10000);*/
+  }, 10000);
 });
 
 var simpleTest = async function (
