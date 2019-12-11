@@ -39,7 +39,7 @@ class Phrasex extends PhraseMatcher {
     for (let i = 0; i < this.database.phraseTable.length; i++) {
       let val = this.database.phraseTable[i]
       debug('val', val)
-      await this.nn.addClass(val, val.words)
+      await this.nn.addClass(val, val.example)
     }
   }
 

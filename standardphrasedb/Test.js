@@ -434,7 +434,9 @@ module.exports = {
 		{   
             exampleWildcards : {column : ["aisle"], item : ["bread"]},
 			"phrase": [
-				"Which (column) is (item) in"
+                "Which (column) is (item) in",
+                "What (column) is the (item) located",
+                "What (column) is that (item) located"
 			],
 			"response": [
 				"(item) is in (column) (value)"
@@ -510,6 +512,86 @@ module.exports = {
 			"meta": {
 				"group": "existence"
 			}
+        },
+        {
+            exampleWildcards : {name : ["Gary's"], item : ["email"]},
+			"phrase": [
+				"What is (name) (item)",
+				"What (item) belongs to (name)"
+			],
+			"response": [
+				"(name) (item) is (value)"
+			],
+			"negative": [
+				"(name) doesn't have (item)"
+			],
+			"continue": [
+				"(item)"
+			],
+			"phraseType": "query",
+			"implies": [
+				"belongs"
+			],
+			"target": [
+				"item"
+			],
+			"storage": "standardExists",
+			"meta": {
+				"group": "existence"
+			}
+        },
+        {
+            exampleWildcards : {name : ["Jessica"], value : ["name"]},
+			"phrase": [
+				"What is my (value)"
+			],
+			"response": [
+				"Your (name) is (value)"
+			],
+			"negative": [
+				"You don't have a (name)"
+			],
+			"continue": [
+				"(item)"
+			],
+			"phraseType": "query",
+			"implies": [
+				"whatsMyName"
+			],
+			"target": [
+				"item"
+			],
+			"storage": "standardExists",
+			"meta": {
+				"group": "whatIsMyName"
+			}
+        },
+        {
+            exampleWildcards : {value : ["shape"], item : ["box"], type: ["square"]},
+			"phrase": [
+				"What is the (value) of the (item)"
+			],
+			"response": [
+				"The (value) of the (item) is (type)"
+			],
+			"negative": [
+				"The (item) has no (value)"
+			],
+			"continue": [
+				"(item)"
+			],
+			"phraseType": "query",
+			"implies": [
+				"featureOfThing"
+			],
+			"target": [
+				"item"
+			],
+			"storage": "standardExists",
+			"meta": {
+				"group": "featureOfThing"
+			}
 		}
+
 	]
 }

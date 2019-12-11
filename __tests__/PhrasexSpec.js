@@ -4,6 +4,8 @@ let Phrasex = require("../Phrasex.js");
 let slotFiller = require("slot-filler");
 let UserData = require("../UserData.js");
 let DefaultDatabase = require("../standardphrasedb/Test.js")
+//let DefaultDatabase = require("../standardphrasedb/Standard.js")
+
 let pd = require("../BasicPhrasexDatabase.js")
 
 let phrasex = null
@@ -44,7 +46,7 @@ describe("Testing Phrasex", function () {
       "How much does the taco salad cost"
     )
 
-    /*await simpleTest(
+    await simpleTest(
       phrasex,
       "What is the true color of the banana",
       { item: "banana" },
@@ -54,14 +56,14 @@ describe("Testing Phrasex", function () {
     await simpleTest(
       phrasex,
       "What is true color of banana",
-      { column: "true color", item: "banana" },
-      "What is true color of banana"
+      { value: "true color", item: "banana" },
+      "What is the true color of the banana"
     )
 
     await simpleTest(
       phrasex,
       "What is John Loverich email",
-      { item: "John Loverich", column: "email" },
+      { name: "John Loverich", item: "email" },
       null,
       ["mail", "address", "email"]
     )
@@ -72,7 +74,7 @@ describe("Testing Phrasex", function () {
     await simpleTest(
       phrasex,
       "What is John Loverich email",
-      { item: "John" },
+      { name: "John" },
       null,
       ["mail", "address", "tmail"],
       true
@@ -82,7 +84,7 @@ describe("Testing Phrasex", function () {
     await simpleTest(
       phrasex,
       "What is John Loverich email?",
-      { item: "John Loverich", column: "email" },
+      { item: "John Loverich", item: "email" },
       null,
       ["mail", "address", "email"],
       true
@@ -92,7 +94,7 @@ describe("Testing Phrasex", function () {
     await simpleTest(
       phrasex,
       "What is John Loverich Email?",
-      { item: "John Loverich", column: "Email" },
+      { name: "John Loverich", item: "Email" },
       null,
       ["mail", "address", "email"],
       true
@@ -116,9 +118,9 @@ describe("Testing Phrasex", function () {
     await simpleTest(
       phrasex,
       "What is my name",
-      { column: "name" },
+      { value: "name" },
       null,
-      "What is my (column)"
+      "What is my (name)"
     )
 
     //Show that we get the correct reconstruction
@@ -127,7 +129,7 @@ describe("Testing Phrasex", function () {
       column: "aisle 2"
     });
     expect(res.phrase).toEqual("The tomato is in aisle 2");
-    expect(res.success).toEqual(true);*/
+    expect(res.success).toEqual(true);
 
     done();
 

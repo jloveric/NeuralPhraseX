@@ -2,6 +2,7 @@
 let {Helper} = require('helper-clockmaker')
 let Logger = require("helper-clockmaker").Logger("PhraseDatabase");
 let debug = require("debug")("PhraseDatabase");
+let slotFiller = require("slot-filler")
 
 
 /**
@@ -118,11 +119,29 @@ class PhraseDatabase {
       }
     }
 
+    let exampleWildcards = null
+    //TODO: Just get the first wildcard for now - will implement more in the future
+    if(obj.exampleWildcards) {
+      exampleWildcards = {}
+      for(let key in obj.exampleWildcards) {
+        exampleWildcards[key] = obj.exampleWildcards[key][0];
+      }
+    }
+
     let pList = [];
     if (obj.phrase) {
       //If it has a phrase block
       for (let i = 0; i < obj.phrase.length; i++) {
+        let example = obj.phrase[i]
+        
+        if(exampleWildcards!=null) {
+          debug('obj.phrase',obj.phrase[i], "exampleWildcards", exampleWildcards)
+          example = slotFiller.reconstructPhrase(obj.phrase[i], exampleWildcards).phrase
+        }
+
         let no = this.addPhrase({
+          exampleWildcards : obj.exampleWildcards,
+          example : example,
           phrase: obj.phrase[i],
           phraseType: obj.phraseType,
           implies: obj.implies,
@@ -150,7 +169,14 @@ class PhraseDatabase {
 
     if (obj.response) {
       for (let i = 0; i < obj.response.length; i++) {
+        
+        let example = obj.response[i]
+        if(exampleWildcards!=null) {
+          example = slotFiller.reconstructPhrase(obj.response[i], exampleWildcards).phrase
+        }
+
         newObj.phrase = obj.response[i];
+        newObj.example = example
         newObj.continue = obj.continue ? obj.continue : [obj.response[i]];
         newObj.storage = storage.response;
         let no = this.addPhrase(Object.assign({}, newObj));
