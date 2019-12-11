@@ -322,16 +322,20 @@ module.exports = {
 			}
 		},*/
 		{
-			"phrase": [
+            "exampleWildcards" : {name : ["John"]},
+            "phrase": [
 				"I want to speak with (name)",
 				"Let me talk with (name)"
-			],
+            ],
 			"response": [
 				"Ok, I'm switching you to (name)",
 				"You have chosen to speak with (name). Good luck!",
 				"Now you are speaking with (name)",
 				"(name) is ready to text!"
-			],
+            ],
+            "exampleResponse" : [
+
+            ],
 			"negative": [
 				"I don't know any (name)"
 			],
@@ -347,6 +351,7 @@ module.exports = {
 			}
 		},
 		{
+            exampleWildcards: {value : ["Jerry"], item : ["cereal"]},
 			"phrase": [
 				"Who can I talk to about (item)"
 			],
@@ -375,6 +380,7 @@ module.exports = {
 			}
 		},
 		{
+            exampleWildcards : {value : ["Karla"]},
 			"phrase": [
 				"Who can I talk to?"
 			],
@@ -401,6 +407,7 @@ module.exports = {
 			}
 		},
 		{
+            exampleWildcards : {value : ["Laura"]},
 			"phrase": [
 				"My name is (value).",
 			],
@@ -424,7 +431,8 @@ module.exports = {
 				"group": "greeting"
 			}
 		},
-		{
+		{   
+            exampleWildcards : {column : ["aisle"], item : ["bread"]},
 			"phrase": [
 				"Which (column) is (item) in"
 			],
@@ -451,6 +459,7 @@ module.exports = {
 			}
 		},
 		{
+            exampleWildcards : {value : ["10 dollars"], item : ["bread"]},
 			"phrase": [
 				"How much does the (item) cost",
 			],
@@ -475,8 +484,8 @@ module.exports = {
 				"group": "price"
 			}
 		},
-		
 		{
+            exampleWildcards : {item : ["fish"]},
 			"phrase": [
 				"Do you have any (item)",
 				"Can I buy (item)"

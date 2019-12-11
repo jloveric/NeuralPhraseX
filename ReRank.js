@@ -92,7 +92,7 @@ let alignmentRank = function(rSet, searchText) {
   let phraseOld = null;
   let scoreOld = null;
   for (let i = 0; i < rSet.length; i++) {
-    let phrase = rSet[i]._source.phrase;
+    let phrase = rSet[i].key.phrase;
 
     if (phrase == phraseOld) {
       //There can be 1000's of identical phrases so don't re-calculate the score in this case
@@ -103,7 +103,7 @@ let alignmentRank = function(rSet, searchText) {
         score: deepcopy(ans)
       });
     } else {
-      let wordArray = rSet[i]._source.phrase.match(Helper.tokenize);
+      let wordArray = rSet[i].key.phrase.match(Helper.tokenize);
       //let ans = similarity(searchArray, wordArray, { f: similarityScore.metaphoneDl, options: { threshold: 0.3 } })
       let ans = similarity(searchArray, wordArray, similarityScore.commonScore);
       //debug('ans', ans)
@@ -133,7 +133,7 @@ let frequencyRank = function(rSet, phraseFrequency) {
   let pSum = 0.0;
   let ansList = [];
   for (let i = 0; i < rSet.length; i++) {
-    let gId = rSet[i]._source.meta.groupIndex;
+    let gId = rSet[i].key.meta.groupIndex;
     let tp = phraseFrequency.getProbability(gId);
     ansList.push({ result: rSet[i], confidence: tp });
   }

@@ -58,7 +58,7 @@
     "collections": "^5.1.9",
     "deepmerge": "^4.2.2",
     "helper-clockmaker": "^1.0.11",
-    "neural-sentence-search": "^1.0.4",
+    "neural-sentence-search": "^1.1.0",
     "pos": "^0.4.2",
     "slot-filler": "^1.0.6"
   }

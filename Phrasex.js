@@ -53,8 +53,8 @@ class Phrasex extends PhraseMatcher {
       let tellList = [];
       let otherList = [];
       for (let i = 0; i < equalList.length; i++) {
-        debug("checking loop", equalList[i].result._source);
-        if (equalList[i].result._source.phraseType == "tell") {
+        debug("checking loop", equalList[i].result.key);
+        if (equalList[i].result.key.phraseType == "tell") {
           tellList.push(equalList[i]);
         } else {
           otherList.push(equalList[i]);
@@ -95,38 +95,8 @@ class Phrasex extends PhraseMatcher {
 
     debug("database", this.database);
 
-    /*let query = {
-      index: this.database,
-      size: this.gf.elasticsearch.numResultsPhrase,
-      searchType: "dfs_query_then_fetch",
-      body: {
-        explain: false,
-        highlight: {
-          fields: {
-            words: {
-              force_source: true
-            }
-          },
-          require_field_match: true
-        },
-        query: {
-          multi_match: {
-            fields: ["words"],
-            query: searchText,
-            fuzziness: "AUTO"
-          }
-        }
-      }
-    };*/
-
-    //let p = this.client.search(query);
-
     let p = await this.nn.search(searchText,10)
     
-    //hack now since nn only returns one result
-    p = [p]
-
-    debug('p',p)
 
     /*if (body.hits.total == 0) {
       Logger.warn("No match for query", searchText);
@@ -141,11 +111,6 @@ class Phrasex extends PhraseMatcher {
     let hitList = reRank(hits, searchText, userData.phraseFrequency);
     let orderedList = this.filterResults(hitList);
 
-    /*debug("hitList", hitList);
-    debug("orderedList", orderedList);
-
-    let orderedList = p*/
-
     debug('orderedList', orderedList)
 
     if (!orderedList.length) {
@@ -155,7 +120,8 @@ class Phrasex extends PhraseMatcher {
 
     let pList = [];
     for (let i = 0; i < orderedList.length; i++) {
-      let hit = orderedList[i].key;
+      debug('orderedList[i]', orderedList[i])
+      let hit = orderedList[i].result.key;
 
       debug("hit", hit);
 
@@ -167,6 +133,8 @@ class Phrasex extends PhraseMatcher {
 
       //tokenize the query
       let query = searchText.match(Helper.tokenize);
+
+      debug('bestMatch1', bestMatch, 'query', query, 'orderList[i].score',orderedList[i].score)
 
       //We already know the score so we don't need to call alignWords
       let align = slotFiller.computeQueryIndex(
@@ -294,6 +262,8 @@ class Phrasex extends PhraseMatcher {
       let queryIndex = resArray.matchScore;
       let source = resArray.source;
       let score = resArray.confidence;
+
+      debug('bestMatch', bestMatch, 'query', query, 'queryIndex', queryIndex, 'keywords', keywords)
 
       //console.log("bestmatch",bestMatch)
       let wcAndScore = slotFiller.computeWildcards(
