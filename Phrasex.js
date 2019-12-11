@@ -1,7 +1,7 @@
 "use strict";
 
-let Helper = require("helper-clockmaker");
-let Logger = Helper.Logger("Phrasex");
+let { Helper } = require("helper-clockmaker");
+let Logger = require("helper-clockmaker").Logger("Phrasex");
 
 let reRank = require("./ReRank.js").reRank;
 let PhraseMatcher = require("./PhraseMatcher.js");
@@ -9,6 +9,10 @@ let PhraseHitsFilterFactory = require("./PhraseHitsFilter.js");
 let slotFiller = require("slot-filler");
 
 let debug = require("debug")("Phrasex");
+let { NeuralSentenceSearch } = require('neural-sentence-search')
+
+let tf = require('@tensorflow/tfjs')
+tf.setBackend('cpu')
 
 /**
  * This class is the phrase matcher and uses the slotFiller with specific phrases.
@@ -17,10 +21,11 @@ let debug = require("debug")("Phrasex");
  * "Do you have (item)" and then resolve {item : 'tacos'}
  */
 class Phrasex extends PhraseMatcher {
-  constructor() {
+  constructor(database) {
     super();
     this.hitsFilter = PhraseHitsFilterFactory("NoPhraseFilter");
-    this.database = "phrasedb";
+    this.database = database;
+    this.nn = new NeuralSentenceSearch()
   }
 
   /**
@@ -29,13 +34,12 @@ class Phrasex extends PhraseMatcher {
    * options = {database : something} where database is an alternative to using
    * the phrasedb.
    */
-  initialize(options) {
-    if (!options) {
-      this.database = "phrasedb";
-    } else if (!options.database) {
-      this.database = "phrasedb";
-    } else {
-      this.database = options.phraseTable;
+  async initialize() {
+    await this.nn.initialize();
+    for (let i = 0; i < this.database.phraseTable.length; i++) {
+      let val = this.database.phraseTable[i]
+      debug('val', val)
+      await this.nn.addClass(val, val.words)
     }
   }
 
@@ -83,7 +87,7 @@ class Phrasex extends PhraseMatcher {
    * @return returns the list of matched words with associated indexes given
    * in 'bestMatch' and returns unmatched words with the index given as -1.
    */
-  find(searchText, userData) {
+  async find(searchText, userData) {
     debug("Stepping into phrasex find", searchText);
     Helper.logAndThrowUndefined("Phrasex search text is undefined", searchText);
 
@@ -91,7 +95,7 @@ class Phrasex extends PhraseMatcher {
 
     debug("database", this.database);
 
-    let query = {
+    /*let query = {
       index: this.database,
       size: this.gf.elasticsearch.numResultsPhrase,
       searchType: "dfs_query_then_fetch",
@@ -113,120 +117,125 @@ class Phrasex extends PhraseMatcher {
           }
         }
       }
-    };
+    };*/
 
-    let p = this.client.search(query);
+    //let p = this.client.search(query);
 
-    //let np = new Promise((resolve, reject) => {
-    let np = p
-      .then(body => {
-        if (body.hits.total == 0) {
-          Logger.warn("No match for query", searchText);
-          return Promise.reject([{ confidence: 0.0 }]);
-          //return;
-        }
+    let p = await this.nn.search(searchText,10)
+    
+    //hack now since nn only returns one result
+    p = [p]
 
-        //Logger.error('Hits',body.hits.hits);
-        let hits = this.hitsFilter.filter(body.hits.hits);
+    debug('p',p)
 
-        //get the phrase from elastic search with the closest match and tokenize
-        let hitList = reRank(hits, searchText, userData.phraseFrequency);
-        let orderedList = this.filterResults(hitList);
+    /*if (body.hits.total == 0) {
+      Logger.warn("No match for query", searchText);
+      return Promise.reject([{ confidence: 0.0 }]);
+      //return;
+    }*/
 
-        debug("hitList", hitList);
-        debug("orderedList", orderedList);
+    //Logger.error('Hits',body.hits.hits);
+    let hits = this.hitsFilter.filter(p);
 
-        if (!orderedList.length) {
-          Logger.warn("No hits match", searchText);
-          return Promise.reject([{ confidence: 0.0 }]);
-        }
+    //get the phrase from elastic search with the closest match and tokenize*/
+    let hitList = reRank(hits, searchText, userData.phraseFrequency);
+    let orderedList = this.filterResults(hitList);
 
-        let pList = [];
-        for (let i = 0; i < orderedList.length; i++) {
-          let hit = orderedList[i].result;
+    /*debug("hitList", hitList);
+    debug("orderedList", orderedList);
 
-          debug("hit", hit);
+    let orderedList = p*/
 
-          let source = hit._source;
-          let highlight = hit.highlight;
+    debug('orderedList', orderedList)
 
-          Logger.debug("Source", body.hits);
-          let bestMatch = source["phrase"].match(Helper.tokenize);
+    if (!orderedList.length) {
+      Logger.warn("No hits match", searchText);
+      return Promise.reject([{ confidence: 0.0 }]);
+    }
 
-          //tokenize the query
-          let query = searchText.match(Helper.tokenize);
+    let pList = [];
+    for (let i = 0; i < orderedList.length; i++) {
+      let hit = orderedList[i].key;
 
-          //We already know the score so we don't need to call alignWords
-          let align = slotFiller.computeQueryIndex(
-            orderedList[i].score,
-            bestMatch,
-            query
-          );
+      debug("hit", hit);
 
-          let queryIndex = align.queryIndex;
+      let source = hit;
+      let highlight = '';
 
-          //Runs through the words and check for stopwords if the index is
-          //already -1.  Stopwords will be -3.
-          //Also, make sure at least one value matched, i.e., index>=0
+      Logger.debug("Source", hit);
+      let bestMatch = source["phrase"].match(Helper.tokenize);
 
-          let numMatched = 0;
-          for (let i = 0; i < queryIndex.length; i++) {
-            if (queryIndex[i].index == -1) {
-              let simpleWord = queryIndex[i].word
-                .replace(Helper.nonAlphaNumeric, "")
-                .toLowerCase();
-              let isStop = Helper.isStopWord(simpleWord);
-              if (isStop) {
-                //Mark as a stopword
-                queryIndex[i].index = -3;
-              }
-            }
+      //tokenize the query
+      let query = searchText.match(Helper.tokenize);
 
-            if (queryIndex[i].index >= 0) {
-              numMatched = numMatched + 1;
-            }
-          }
+      //We already know the score so we don't need to call alignWords
+      let align = slotFiller.computeQueryIndex(
+        orderedList[i].score,
+        bestMatch,
+        query
+      );
 
-          let wordsInPhrase = searchText.match(Helper.tokenize).length;
+      let queryIndex = align.queryIndex;
 
-          let score = align.score * align.order * align.size;
+      //Runs through the words and check for stopwords if the index is
+      //already -1.  Stopwords will be -3.
+      //Also, make sure at least one value matched, i.e., index>=0
 
-          debug("queryIndex", queryIndex);
-
-          if (numMatched) {
-            let ans = {
-              wcDB: bestMatch,
-              wcUser: query,
-              matchScore: queryIndex,
-              source: source,
-              highlight: highlight.words,
-              confidence: score,
-              score: align
-            };
-
-            //console.log('Phrasex Response', ans)
-            //return Promise.resolve(ans);
-            debug("adding to plist", ans);
-            pList.push(ans);
-            //return Promise.resolve([ans])
-          } else {
-            Logger.warn("Wasn't able to match a single word");
-            //pList.push({confidence : 0.0})
-            //return Promise.reject({ confidence: 0.0 });
+      let numMatched = 0;
+      for (let i = 0; i < queryIndex.length; i++) {
+        if (queryIndex[i].index == -1) {
+          let simpleWord = queryIndex[i].word
+            .replace(Helper.nonAlphaNumeric, "")
+            .toLowerCase();
+          let isStop = Helper.isStopWord(simpleWord);
+          if (isStop) {
+            //Mark as a stopword
+            queryIndex[i].index = -3;
           }
         }
 
-        //debug('PLIST', pList)
-        if (pList.length) {
-          return Promise.resolve(pList);
+        if (queryIndex[i].index >= 0) {
+          numMatched = numMatched + 1;
         }
+      }
 
-        return Promise.reject([{ confidence: 0.0 }]);
-      })
-      .catch(reason => {
-        Logger.error(reason);
-        return Promise.reject([{ confidence: 0.0 }]);
-      });
+      let wordsInPhrase = searchText.match(Helper.tokenize).length;
+
+      let score = align.score * align.order * align.size;
+
+      debug("queryIndex", queryIndex);
+
+      if (numMatched) {
+        let ans = {
+          wcDB: bestMatch,
+          wcUser: query,
+          matchScore: queryIndex,
+          source: source,
+          highlight: highlight.words,
+          confidence: score,
+          score: align
+        };
+
+        //console.log('Phrasex Response', ans)
+        //return Promise.resolve(ans);
+        debug("adding to plist", ans);
+        pList.push(ans);
+        //return Promise.resolve([ans])
+      } else {
+        Logger.warn("Wasn't able to match a single word");
+        //pList.push({confidence : 0.0})
+        //return Promise.reject({ confidence: 0.0 });
+      }
+    }
+
+    //debug('PLIST', pList)
+    if (pList.length) {
+      return Promise.resolve(pList);
+    }
+
+    return Promise.reject([{ confidence: 0.0 }]);
+
+
     //});
 
     return np;

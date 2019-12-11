@@ -1,6 +1,6 @@
 "use strict";
 
-let Helper = require("sb/etc/Helper.js");
+let {Helper} = require("helper-clockmaker");
 
 /**
  * Base class for reducing the number of hits based on filters

@@ -3,6 +3,7 @@ let {Helper} = require('helper-clockmaker')
 let Logger = require("helper-clockmaker").Logger("PhraseDatabase");
 let debug = require("debug")("PhraseDatabase");
 
+
 /**
  * PhraseDatabase provides a way to access and generate a phrase database in mongo
  * given a phrase database file.  The phrase database file is a compact form of the

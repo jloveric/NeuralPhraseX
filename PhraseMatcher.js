@@ -1,19 +1,19 @@
 "use strict";
 
-let es = require("elasticsearch");
+//let es = require("elasticsearch");
 let GetConfigValues = require("helper-clockmaker").GetConfigValues
 
 //TODO: Not sure this does anything important anymore.
 class PhraseMatcher {
   constructor() {
-    this.elasticsearch = es;
-    this.gf = new GetConfigValues();
+    //this.elasticsearch = es;
+    //this.gf = new GetConfigValues();
 
     //TODO: it seems like I should be using my
     //elasticsearch wrapper here.
-    this.client = new this.elasticsearch.Client({
+    /*this.client = new this.elasticsearch.Client({
       host: this.gf.elasticsearch.host
-    });
+    });*/
   }
 
   close() {

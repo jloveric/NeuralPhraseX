@@ -84,6 +84,8 @@ let alignmentRank = function(rSet, searchText) {
   //Otherwise we need to compare!
   let searchArray = searchText.match(Helper.tokenize);
 
+  debug('rSet', rSet)
+
   let score = [];
   let ansList = [];
 
