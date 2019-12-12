@@ -1,5 +1,5 @@
 {
-  "name": "neuralphrasex",
+  "name": "neural-phrasex",
   "version": "1.0.0",
   "description": "Matches a given phrase to the best match in a database and determines the wildcards using a slot filler.  This is like a regex, but much more flexible for phrase matching and alignment.",
   "main": "index.js",
