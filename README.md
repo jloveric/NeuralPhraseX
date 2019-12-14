@@ -3,9 +3,7 @@
 
 # NeuralPhraseX
 
-Mixed neural network / fuzzy similarity based phrase database matching.  Uses universal sentence embeddings from Tensorflow combined with KNN and fuzzy similarity to perform slot filling based on a list of potential phrases.  The approach allows for one shot learning and the efficiency will be determined by KNN (or other approximate nearest neighbor).  The name "PhraseX" comes from "Regex", as it is a more flexible way of matching phrases than using regex and better suited for natural language.
-
-The intent here is that this tool can be run in the browser and it will not depend on an external database.  Universal sentence embeddings will make it much better (though possibly slower) than the elasticsearch based version "PhraseX".
+Takes a javascript object that contains a set of possible pattern matches, phrases and wildcards.  These phrases are converted to sentence embeddings in tensorflow.  A search phrase is passed to Phrasex and an object is returned containing a list of close phrases as well is the slots that are filled in.  The algorithm relies on npm modules, neural-sentence-search, slot-filler and sentence-similarity.  Each "match" is scored based on how well it matched.  This can be used directly in processing text in a chatbot or a one shot information extraction pipeline.
 
 ## Install
 
@@ -67,6 +65,8 @@ let compute = async () => {
   let res2 = await phrasex.getWildcardsAndMatch("What is a coconut", "", userData)
   console.log(res2[0])
 })
+
+compute()
 
 ```
 with result
