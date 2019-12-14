@@ -1,3 +1,5 @@
-let phrasex = require('./Phrasex.js')
+let Phrasex = require('./Phrasex.js')
+let UserData = require('./UserData.js')
+let BasicPhrasexDatabase = require("../BasicPhrasexDatabase.js")
 
-module.exports = { phrasex }
+module.exports = { Phrasex, UserData, BasicPhrasexDatabase }

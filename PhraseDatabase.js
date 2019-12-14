@@ -3,7 +3,7 @@ let {Helper} = require('helper-clockmaker')
 let Logger = require("helper-clockmaker").Logger("PhraseDatabase");
 let debug = require("debug")("PhraseDatabase");
 let slotFiller = require("slot-filler")
-
+let deepmerge = require('deepmerge')
 
 /**
  * PhraseDatabase provides a way to access and generate a phrase database in mongo
@@ -95,10 +95,18 @@ class PhraseDatabase {
    */
   addGroup(obj, definitions) {
     debug("adding obj", obj);
-    Helper.hasProperties(obj, ["meta", "target", "implies", "phraseType"]);
-    Helper.hasProperties(obj.meta, ["group"]);
+    Helper.hasProperties(obj, [/*"meta", "target", "implies",*/ "phraseType"]);
+    //Helper.hasProperties(obj.meta, ["group"]);
 
-    obj.meta.groupIndex = this.groupIndex;
+    if(!obj.implies) {
+      obj.implies = [obj.phraseType]
+    }
+
+    //obj.meta.groupIndex = this.groupIndex;
+    if(!obj.meta) {
+      obj.meta = {}
+    }
+    obj.meta.groupInex = this.groupIndex
 
     let storage = { phrase: null, response: null };
 
@@ -139,16 +147,28 @@ class PhraseDatabase {
           example = slotFiller.reconstructPhrase(obj.phrase[i], exampleWildcards).phrase
         }
 
-        let no = this.addPhrase({
+        let newData = obj
+
+        let ans = deepmerge.all([newData, {
+          example : example, 
+          phrase: obj.phrase[i],
+          implies : obj.implies ? obj.implies : [obj.phraseType],
+          storage:storage.phrase
+        }])
+
+        let no = this.addPhrase(ans);
+
+        /*let no = this.addPhrase({
           exampleWildcards : obj.exampleWildcards,
           example : example,
           phrase: obj.phrase[i],
           phraseType: obj.phraseType,
-          implies: obj.implies,
+          implies: obj.implies || [obj.phraseType],
           target: obj.target,
           meta: obj.meta,
           storage: storage.phrase
-        });
+        });*/
+
         pList.push(no);
       }
     }
@@ -226,7 +246,7 @@ class PhraseDatabase {
    * @param meta is an object containing any additional information you might use
    */
   addPhrase(obj) {
-    Helper.hasProperties(obj, ["target", "implies", "phraseType"]);
+    Helper.hasProperties(obj, [/*"target", "implies",*/ "phraseType"]);
 
     if (!obj.meta) {
       obj.meta = {};
