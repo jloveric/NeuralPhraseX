@@ -6,5 +6,6 @@ let PhraseMatcher = require("./PhraseMatcher.js")
 let PhraseSequence = require("./PhraseSequence.js")
 let ReRank = require("./ReRank.js")
 let SearchRecord = require("./SearchRecord.js")
+let GenerateObject = require("./GenerateObject.js")
 
-module.exports = { Phrasex, UserData, BasicPhrasexDatabase, PhraseHitsFilter, PhraseMatcher, PhraseSequence, ReRank, SearchRecord }
+module.exports = { Phrasex, UserData, BasicPhrasexDatabase, PhraseHitsFilter, PhraseMatcher, PhraseSequence, ReRank, SearchRecord, GenerateObject }
