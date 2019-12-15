@@ -45,9 +45,29 @@ class PhraseDatabase {
    * The map is separated into arrays of the different implies
    * @param phraseType is the type of phrase to collect, "tell" for example.
    */
-  getPhraseMap(phraseType) {
+  async getPhraseMap(phraseType) {
     Logger.debug("PhraseDatabase inside getPhraseMap");
-    let np = new Promise((resolve, reject) => {
+
+    let a = this.phraseTable.filter((element)=>{
+      return (element.phraseType == phraseType)
+    })
+
+    let tMap = new Map();
+
+    a.forEach((val)=>{
+      let words = this.getTypeIdentifier(documents[i]);
+
+      if (tMap.get(words)) {
+        tMap.get(words).push(documents[i]);
+      } else {
+        tMap.set(words, [documents[i]]);
+      }
+    })
+
+    return tMap
+
+
+    /*let np = new Promise((resolve, reject) => {
       let table = this.db.collection(this.phraseTableName);
 
       table.find({ phraseType: phraseType }).toArray((err, documents) => {
@@ -75,7 +95,7 @@ class PhraseDatabase {
       });
     });
 
-    return np;
+    return np;*/
   }
 
   /**
