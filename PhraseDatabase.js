@@ -118,9 +118,9 @@ class PhraseDatabase {
     Helper.hasProperties(obj, [/*"meta", "target", "implies",*/ "phraseType"]);
     //Helper.hasProperties(obj.meta, ["group"]);
 
-    if(!obj.implies) {
+    /*if(!obj.implies) {
       obj.implies = [obj.phraseType]
-    }
+    }*/
 
     //obj.meta.groupIndex = this.groupIndex;
     if(!obj.meta) {
@@ -172,7 +172,7 @@ class PhraseDatabase {
         let ans = deepmerge.all([newData, {
           example : example, 
           phrase: obj.phrase[i],
-          implies : obj.implies ? obj.implies : [obj.phraseType],
+          implies : obj.implies || [obj.phraseType],
           storage:storage.phrase
         }])
 
@@ -198,7 +198,7 @@ class PhraseDatabase {
 
     let newObj = {
       phraseType: "tell",
-      implies: obj.implies,
+      implies: obj.implies ? obj.implies : obj.phraseType,
       target: obj.target,
       meta: obj.meta
     };
@@ -217,7 +217,7 @@ class PhraseDatabase {
 
         newObj.phrase = obj.response[i];
         newObj.example = example
-        newObj.continue = obj.continue ? obj.continue : [obj.response[i]];
+        newObj.continue = obj.continue || [obj.response[i]];
         newObj.storage = storage.response;
         let no = this.addPhrase(Object.assign({}, newObj));
         pList.push(no);
@@ -272,11 +272,17 @@ class PhraseDatabase {
       obj.meta = {};
     }
 
+    debug('other', obj)
     //Create to sentences, one where terms in parentheses are ignored and
     //the other where they remain.
     let newPhrase = this.reducePhrase(obj.phrase);
 
-    let ans = obj.implies.sort();
+    let newImplies = obj.implies
+    if(typeof newImplies === 'string') {
+      newImplies = [newImplies]
+    }
+    debug('newImplies', newImplies)
+    let ans = newImplies.sort();
     obj.words = newPhrase;
     obj.implies = ans;
 
