@@ -55,12 +55,12 @@ class PhraseDatabase {
     let tMap = new Map();
 
     a.forEach((documents)=>{
-      let words = this.getTypeIdentifier(documents[i]);
+      let words = this.getTypeIdentifier(documents);
 
       if (tMap.get(words)) {
-        tMap.get(words).push(documents[i]);
+        tMap.get(words).push(documents);
       } else {
-        tMap.set(words, [documents[i]]);
+        tMap.set(words, [documents]);
       }
     })
 
