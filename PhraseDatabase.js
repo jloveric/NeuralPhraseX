@@ -54,7 +54,7 @@ class PhraseDatabase {
 
     let tMap = new Map();
 
-    a.forEach((val)=>{
+    a.forEach((documents)=>{
       let words = this.getTypeIdentifier(documents[i]);
 
       if (tMap.get(words)) {
