@@ -156,7 +156,7 @@ class PhraseDatabase {
       }
     }
 
-    let pList = [];
+    //let pList = [];
     if (obj.phrase) {
       //If it has a phrase block
       for (let i = 0; i < obj.phrase.length; i++) {
@@ -189,7 +189,7 @@ class PhraseDatabase {
           storage: storage.phrase
         });*/
 
-        pList.push(no);
+        //pList.push(no);
       }
     }
 
@@ -220,14 +220,14 @@ class PhraseDatabase {
         newObj.continue = obj.continue || [obj.response[i]];
         newObj.storage = storage.response;
         let no = this.addPhrase(Object.assign({}, newObj));
-        pList.push(no);
+        //pList.push(no);
       }
     }
 
     //Again, increment groupIndex for the next group
     this.groupIndex++;
 
-    return pList;
+    return this.phraseTable;
   }
 
   //Create to sentences, one where terms in parentheses are ignored and

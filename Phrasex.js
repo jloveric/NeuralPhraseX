@@ -11,7 +11,6 @@ let slotFiller = require("slot-filler");
 let debug = require("debug")("Phrasex");
 let { NeuralSentenceSearch } = require('neural-sentence-search')
 
-
 let tf = require('@tensorflow/tfjs')
 tf.setBackend('cpu')
 
