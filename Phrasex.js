@@ -198,15 +198,11 @@ class Phrasex extends PhraseMatcher {
 
     //debug('PLIST', pList)
     if (pList.length) {
-      return Promise.resolve(pList);
+      return pList;
     }
 
     return Promise.reject([{ confidence: 0.0 }]);
 
-
-    //});
-
-    return np;
   }
 
   /**

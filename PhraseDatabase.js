@@ -122,6 +122,8 @@ class PhraseDatabase {
       obj.implies = [obj.phraseType]
     }*/
 
+    obj.implies = obj.implies || [obj.phraseType]
+
     //obj.meta.groupIndex = this.groupIndex;
     if(!obj.meta) {
       obj.meta = {}
@@ -172,8 +174,9 @@ class PhraseDatabase {
         let ans = deepmerge.all([newData, {
           example : example, 
           phrase: obj.phrase[i],
-          implies : obj.implies || [obj.phraseType],
-          storage:storage.phrase
+          //implies : obj.implies || [obj.phraseType],
+          storage:storage.phrase,
+          //meta: obj.meta
         }])
 
         let no = this.addPhrase(ans);
@@ -198,7 +201,7 @@ class PhraseDatabase {
 
     let newObj = {
       phraseType: "tell",
-      implies: obj.implies || [obj.phraseType],
+      implies: obj.implies,
       target: obj.target,
       meta: obj.meta
     };
