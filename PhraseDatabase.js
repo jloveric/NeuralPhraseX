@@ -198,7 +198,7 @@ class PhraseDatabase {
 
     let newObj = {
       phraseType: "tell",
-      implies: obj.implies ? obj.implies : obj.phraseType,
+      implies: obj.implies || [obj.phraseType],
       target: obj.target,
       meta: obj.meta
     };
