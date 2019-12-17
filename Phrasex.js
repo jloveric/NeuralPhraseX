@@ -68,7 +68,7 @@ class Phrasex extends PhraseMatcher {
 
       return otherList;
     } catch (e) {
-      debug("TOTALLY JACKED_________________________________");
+      debug("SOMETHING IS WRONG_________________________________");
     }
   }
 

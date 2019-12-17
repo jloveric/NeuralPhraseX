@@ -65,37 +65,6 @@ class PhraseDatabase {
     })
 
     return tMap
-
-
-    /*let np = new Promise((resolve, reject) => {
-      let table = this.db.collection(this.phraseTableName);
-
-      table.find({ phraseType: phraseType }).toArray((err, documents) => {
-        if (err) {
-          Logger.error(err);
-          reject();
-        } else {
-          //Logger.debug('PhraseDatabase getting documents', documents)
-          let tMap = new Map();
-
-          for (let i = 0; i < documents.length; i++) {
-            //let words = documents[i].implies.join(',');
-            let words = this.getTypeIdentifier(documents[i]);
-
-            if (tMap.get(words)) {
-              //console.log(tMap.get(words))
-              tMap.get(words).push(documents[i]);
-            } else {
-              tMap.set(words, [documents[i]]);
-            }
-          }
-
-          resolve(tMap);
-        }
-      });
-    });
-
-    return np;*/
   }
 
   /**
@@ -117,10 +86,6 @@ class PhraseDatabase {
     debug("adding obj", obj);
     Helper.hasProperties(obj, [/*"meta", "target", "implies",*/ "phraseType"]);
     //Helper.hasProperties(obj.meta, ["group"]);
-
-    /*if(!obj.implies) {
-      obj.implies = [obj.phraseType]
-    }*/
 
     obj.implies = obj.implies || [obj.phraseType]
 
@@ -192,7 +157,6 @@ class PhraseDatabase {
           storage: storage.phrase
         });*/
 
-        //pList.push(no);
       }
     }
 
