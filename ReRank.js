@@ -1,6 +1,7 @@
 "use strict";
 let Helper = require("helper-clockmaker").Helper;
 let debug = require("debug")("ReRank");
+let {computeSemanticScore} = require('./Util.js')
 
 let {sentenceSimilarity, similarityScore} = require("sentence-similarity");
 let similarity = sentenceSimilarity
@@ -8,10 +9,8 @@ let deepcopy = require("clone");
 
 //Compare the complete score
 function compare(a, b) {
-  let scoreA = a.score.score * a.score.order * a.score.size;
-  let scoreB = b.score.score * b.score.order * b.score.size;
-
-  //debug('score', scoreA, scoreB)
+  let scoreA = a.score.score * a.score.order * a.score.size * a.score.semantic;
+  let scoreB = b.score.score * b.score.order * b.score.size * a.score.semantic;
 
   if (scoreA < scoreB) {
     return 1;
@@ -26,8 +25,6 @@ function compareScore(a, b) {
   let scoreA = a.score.score;
   let scoreB = b.score.score;
 
-  //debug('score', scoreA, scoreB)
-
   if (scoreA < scoreB) {
     return 1;
   } else if (scoreA > scoreB) {
@@ -41,8 +38,6 @@ function compareExactScore(a, b) {
   let scoreA = a.score.exact;
   let scoreB = b.score.exact;
 
-  //debug('score', scoreA, scoreB)
-
   if (scoreA < scoreB) {
     return 1;
   } else if (scoreA > scoreB) {
@@ -51,27 +46,18 @@ function compareExactScore(a, b) {
   return 0;
 }
 
-/**
- * Search through the elasticsearch results and look for all of
- * the results that have boostRank defined.  Move these search
- * results to the head of the results list.
- */
-//TODO: pretty sure this is not needed anymore
-let boostSort = function(esResult) {
-  let boostSet = [];
-  let normalSet = [];
-  for (let i = 0; i < esResult.length; i++) {
-    if (esResult[i]._source.boostRank) {
-      debug("Adding to boostSet");
-      boostSet.push(esResult[i]);
-    } else {
-      debug("Adding to normalSet");
-      normalSet.push(esResult[i]);
-    }
-  }
+//Compare the semantic score only
+function compareSemanticScore(a, b) {
+  let scoreA = a.score.semantic;
+  let scoreB = b.score.semantic;
 
-  return boostSet.concat(normalSet);
-};
+  if (scoreA < scoreB) {
+    return 1;
+  } else if (scoreA > scoreB) {
+    return -1;
+  }
+  return 0;
+}
 
 //Take an elasticsearch input and resort based on some measure
 let reSort = function(esResult) {
@@ -87,7 +73,6 @@ let alignmentRank = function(rSet, searchText) {
 
   debug('rSet', rSet)
 
-  let score = [];
   let ansList = [];
 
   let phraseOld = null;
@@ -127,6 +112,7 @@ let alignmentRank = function(rSet, searchText) {
 /**
  * Rank top results by frequency of occurence.  If wildcards are missing
  * then they need to be recovered from previous statements.
+ * TODO: investigate this because I don't think I'm actually using it.
  */
 let frequencyRank = function(rSet, phraseFrequency) {
   //Now if there is more than one, how do we differentiate?
@@ -146,27 +132,26 @@ let combineRank = function(hits, searchText, phraseFrequency) {
   let ans1 = alignmentRank(hits, searchText);
   let ans2 = frequencyRank(hits, phraseFrequency);
 
-  //Get the top alignment ranking...
-  /*let bestAns = Helper.objectWithBestValue(ans1, (a, b) => {
-        return b.confidence > a.confidence
-    })*/
 
-  /*for(let i=0; i<ans1.length; i++) {
-        debug('Alignment rank', ans1[i])
-         Logger.debug('ans',ans1[i])
-    }*/
-  //debug('Alignment rank', ans1)
-  //debug('Frequency Rank', ans2)
+  //TODO: This does not belong in here, bot OK
+  //align.semantic = 1.0/(1.0+orderedList[i].result.distance)
+  let ans3 = hits.map((val) => {
+    debug('val', val)
+    return {confidence : computeSemanticScore(val.distance)}
+  })
 
   let newAns = [];
   for (let i = 0; i < hits.length; i++) {
     //let newConf = ans1[i].confidence;
     //if (ans1[i].confidence == bestAns.confidence) {
-    let newConf = ans1[i].confidence + ans2[i].confidence;
+    let newConf = ans1[i].confidence + ans2[i].confidence + ans3[i].confidence;
     //}
 
+    let combinedScore = ans1[i].score
+    combinedScore.semantic = ans3[i].confidence
+
     debug("newConf", newConf);
-    newAns.push({ result: hits[i], confidence: newConf, score: ans1[i].score });
+    newAns.push({ result: hits[i], confidence: newConf, score : combinedScore });
   }
 
   return newAns;
@@ -177,7 +162,9 @@ let combineRank = function(hits, searchText, phraseFrequency) {
  * a rough estimate of the best score, run through ReRank to
  * produce the final ranking.
  *
- * First find the best exact score and accept all scores
+ * First filter on best semantic score
+ * 
+ * Then find the best exact score and accept all scores
  * where the exact score or partial score is better than
  * the best exact score.
  *
@@ -195,11 +182,18 @@ let reRank = function(hits, searchText, phraseFrequency) {
 
   let newAns = combineRank(rSet, searchText, phraseFrequency);
 
+  //Best semantic score
+  newAns.sort(compareSemanticScore)
+  let topSemantic = newAns[0].score.semantic
+  let bestList = newAns.filter((val)=>{
+    return val.score.semantic>=topSemantic
+  })
+
   //Then based on the exact score
   newAns.sort(compareExactScore);
   debug(newAns);
   let bestScore = newAns[0].score.exact;
-  let bestList = [];
+  //let bestList = [];
   if (bestScore > 0) {
     for (let i = 0; i < newAns.length; i++) {
       if (newAns[i].score.exact == bestScore) {
@@ -210,14 +204,12 @@ let reRank = function(hits, searchText, phraseFrequency) {
     }
   }
 
-  //First, just score based on the number of matches partial matches
+  //Then add the ones with partial matches greater than the best score
   newAns.sort(compareScore);
   let otherScore = newAns[0].score.score;
   if (bestScore == 0) bestScore = otherScore;
-  //bestScore = bestScore ? bestScore : otherScore
 
   //Select results with the same number of matches
-
   for (let i = 0; i < newAns.length; i++) {
     if (newAns[i].score.score >= bestScore) {
       bestList.push(newAns[i]);
@@ -226,27 +218,25 @@ let reRank = function(hits, searchText, phraseFrequency) {
     }
   }
 
-  //debug('bestList', bestList)
-
   //Then use order an length normalization to disambiguate
   let bestAns = Helper.objectWithBestValue(bestList, (a, b) => {
     //What if two objects have the same score?
     //return a.score.order < b.score.order
     return (
-      a.score.score * a.score.order * a.score.size <
-      b.score.score * b.score.order * b.score.size
+      a.score.score * a.score.order * a.score.size + a.score.semantic<
+      b.score.score * b.score.order * b.score.size + a.score.semantic
     );
     //return a.score.score < b.score.score
   });
 
-  let bs = bestAns.score.score * bestAns.score.order * bestAns.score.size;
+  let bs = bestAns.score.score * bestAns.score.order * bestAns.score.size + bestAns.score.semantic;
   debug("bestAns", bestAns, "bs", bs);
 
   //Create an array where the scores are the highest and identical
   let equalList = [];
   for (let i = 0; i < bestList.length; i++) {
     let score = bestList[i].score;
-    let a = score.score * score.order * score.size;
+    let a = score.score * score.order * score.size + score.semantic;
     debug("bestList", bestList[i]);
     debug("a", a, "bs", bs);
     if (a >= bs) {
@@ -266,4 +256,3 @@ module.exports.reRank = reRank;
 module.exports.alignmentRank = alignmentRank;
 module.exports.frequencyRank = frequencyRank;
 module.exports.reSort = reSort;
-module.exports.boostSort = boostSort;

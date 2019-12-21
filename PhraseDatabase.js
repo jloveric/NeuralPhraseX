@@ -93,7 +93,7 @@ class PhraseDatabase {
     if(!obj.meta) {
       obj.meta = {}
     }
-    obj.meta.groupInex = this.groupIndex
+    obj.meta.groupIndex = this.groupIndex
 
     let storage = { phrase: null, response: null };
 

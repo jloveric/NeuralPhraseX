@@ -7,6 +7,8 @@ let reRank = require("./ReRank.js").reRank;
 let PhraseMatcher = require("./PhraseMatcher.js");
 let PhraseHitsFilterFactory = require("./PhraseHitsFilter.js");
 let slotFiller = require("slot-filler");
+let {computeSemanticScore} = require('./Util.js')
+
 
 let debug = require("debug")("Phrasex");
 let { NeuralSentenceSearch } = require('neural-sentence-search')
@@ -61,10 +63,8 @@ class Phrasex extends PhraseMatcher {
         }
       }
 
-      //otherList.push.apply(otherList, tellList)
+      //Looks like we are putting the tells at the bottom of the list
       otherList = otherList.concat(tellList);
-      debug("equalList", equalList);
-      debug("otherList-------------", otherList);
 
       return otherList;
     } catch (e) {
@@ -143,8 +143,8 @@ class Phrasex extends PhraseMatcher {
         query
       );
 
-      //Add a semantic score.  The smaller the better the match
-      align.semantic = 1.0/(1.0+orderedList[i].result.distance)
+      //Add back in the semantic score since it's not used in slotfiller right now
+      align.semantic = computeSemanticScore(orderedList[i].result.distance)
 
       let queryIndex = align.queryIndex;
 
