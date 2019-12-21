@@ -214,27 +214,16 @@ class Phrasex extends PhraseMatcher {
    * for a given user.
    * @return the promise containing the source and the wildcards.
    */
-  getWildcardsAndMatch(phrase, keywords, userData) {
+  async getWildcardsAndMatch(phrase, keywords, userData) {
     debug("getWildcardsAndMatch");
     if (!phrase) {
       return Promise.resolve();
     }
 
-    let p = this.find(phrase, userData);
+    let resArrayList = await this.find(phrase, userData);
     Logger.debug("searching phrase", phrase);
 
-    let np = p
-      .then(resArrayList => {
-        return Promise.resolve(
-          this.getWildcardsAndMatchNoSearch(resArrayList, keywords, userData)
-        );
-      })
-      .catch(reason => {
-        Logger.warn(reason);
-        return Promise.reject(reason);
-      });
-
-    return np;
+    return this.getWildcardsAndMatchNoSearch(resArrayList, keywords, userData)
   }
 
   /**
