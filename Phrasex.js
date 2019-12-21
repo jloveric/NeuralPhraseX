@@ -144,7 +144,7 @@ class Phrasex extends PhraseMatcher {
       );
 
       //Add a semantic score.  The smaller the better the match
-      align.semantic = orderedList[i].result.distance
+      align.semantic = 1.0/(1.0+orderedList[i].result.distance)
 
       let queryIndex = align.queryIndex;
 
@@ -170,7 +170,8 @@ class Phrasex extends PhraseMatcher {
         }
       }
 
-      let score = align.score * align.order * align.size;
+      //Combine all scores, of course this isn't great...
+      let score = align.score * align.order * align.size * align.semantic;
 
       debug("queryIndex", queryIndex);
 
