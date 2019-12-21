@@ -16,10 +16,6 @@ npm install neural-phrasex
 ```javascript
 let {Phrasex, UserData, BasicPhrasexDatabase} = require("neural-phrasex");
 
-let pd = require("../BasicPhrasexDatabase.js")
-
-let phrasex = null
-
 let simpleDatabase = {
   data: [
     {
