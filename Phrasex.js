@@ -171,7 +171,7 @@ class Phrasex extends PhraseMatcher {
       }
 
       //Combine all scores, of course this isn't great...
-      let score = align.score * align.order * align.size * align.semantic;
+      let score = 0.5*(align.score * align.order * align.size + align.semantic);
 
       debug("queryIndex", queryIndex);
 
