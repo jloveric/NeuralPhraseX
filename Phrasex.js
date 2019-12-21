@@ -143,6 +143,9 @@ class Phrasex extends PhraseMatcher {
         query
       );
 
+      //Add a semantic score.  The smaller the better the match
+      align.semantic = orderedList[i].result.distance
+
       let queryIndex = align.queryIndex;
 
       //Runs through the words and check for stopwords if the index is
@@ -166,8 +169,6 @@ class Phrasex extends PhraseMatcher {
           numMatched = numMatched + 1;
         }
       }
-
-      let wordsInPhrase = searchText.match(Helper.tokenize).length;
 
       let score = align.score * align.order * align.size;
 
