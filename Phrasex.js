@@ -175,7 +175,7 @@ class Phrasex extends PhraseMatcher {
 
       debug("queryIndex", queryIndex);
 
-      if (numMatched) {
+      //if (numMatched) {
         let ans = {
           wcDB: bestMatch,
           wcUser: query,
@@ -191,11 +191,11 @@ class Phrasex extends PhraseMatcher {
         debug("adding to plist", ans);
         pList.push(ans);
         //return Promise.resolve([ans])
-      } else {
+      /*} else {
         Logger.warn("Wasn't able to match a single word");
         //pList.push({confidence : 0.0})
         //return Promise.reject({ confidence: 0.0 });
-      }
+      }*/
     }
 
     //debug('PLIST', pList)
