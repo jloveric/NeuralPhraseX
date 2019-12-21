@@ -1,6 +1,5 @@
 [![Build Status](https://travis-ci.org/jloveric/NeuralPhraseX.svg?branch=master)](https://travis-ci.org/jloveric/NeuralPhraseX)
 
-
 # NeuralPhraseX
 
 Takes a javascript object that contains a set of possible pattern matches, phrases and wildcards.  These phrases are converted to sentence embeddings in tensorflow.  A search phrase is passed to Phrasex and an object is returned containing a list of close phrases as well is the slots that are filled in.  The algorithm relies on npm modules, neural-sentence-search, slot-filler and sentence-similarity.  Each "match" is scored based on how well it matched.  This can be used directly in processing text in a chatbot or a one shot information extraction pipeline.
@@ -87,7 +86,8 @@ with result
         queryIndex: [ [Object], [Object], [Object] ],
         score: 2,
         order: 1,
-        size: 0.5
+        size: 0.5,
+        semantic: 0.580953918415687
       }
     }
 
@@ -111,7 +111,8 @@ with result
         queryIndex: [ [Object], [Object], [Object], [Object] ],
         score: 3,
         order: 1,
-        size: 0.3333333333333333
+        size: 0.3333333333333333,
+        semantic: 0.5399621217119523
       }
     }
 ```
