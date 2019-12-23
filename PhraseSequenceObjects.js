@@ -1,6 +1,6 @@
 "use strict";
 
-let PhraseSequence = require("sb/phrasex/PhraseSequence.js");
+let PhraseSequence = require("./PhraseSequence.js");
 
 class SwitchBotPhraseSequence extends PhraseSequence {
   constructor() {

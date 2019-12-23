@@ -1,6 +1,6 @@
 {
   "name": "neural-phrasex",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Matches a given phrase to the best match in a database and determines the wildcards using a slot filler.  This is like a regex, but much more flexible for phrase matching and alignment.",
   "main": "index.js",
   "scripts": {
@@ -43,8 +43,6 @@
   "homepage": "https://github.com/jloveric/NeuralPhraseX#readme",
   "devDependencies": {
     "husky": "^3.0.9",
-    "jasmine": "^3.5.0",
-    "jasmine-spec-reporter": "^4.2.1",
     "jest": "^24.9.0",
     "lint-staged": "^9.4.2",
     "prettier": "^1.18.2"
@@ -65,11 +63,12 @@
   "dependencies": {
     "clone": "^2.1.2",
     "collections": "^5.1.9",
+    "debug": "^4.1.1",
     "deepmerge": "^4.2.2",
     "helper-clockmaker": "^1.0.11",
-    "index.js": "0.0.3",
     "neural-sentence-search": "^1.1.0",
     "pos": "^0.4.2",
+    "sentence-similarity": "^1.0.8",
     "slot-filler": "^1.0.6"
   }
 }
