@@ -10,6 +10,9 @@ let pd = require("../BasicPhrasexDatabase.js")
 
 let phrasex = null
 
+let tf = require('@tensorflow/tfjs')
+tf.setBackend('cpu')
+
 describe("Testing Phrasex", function () {
 
   beforeAll(async function (done) {

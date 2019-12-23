@@ -13,9 +13,6 @@ let {computeSemanticScore} = require('./Util.js')
 let debug = require("debug")("Phrasex");
 let { NeuralSentenceSearch } = require('neural-sentence-search')
 
-//let tf = require('@tensorflow/tfjs')
-//tf.setBackend('cpu')
-
 /**
  * This class is the phrase matcher and uses the slotFiller with specific phrases.
  * It also performs various other actions and has phrase filters etc...  In particular,

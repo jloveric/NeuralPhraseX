@@ -8,6 +8,9 @@ let pd = require("../BasicPhrasexDatabase.js")
 
 let phrasex = null
 
+let tf = require('@tensorflow/tfjs')
+tf.setBackend('cpu')
+
 let simpleDatabase = {
   data: [
     {

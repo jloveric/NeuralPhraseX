@@ -2,6 +2,9 @@
 
 let PhraseFrequency = require("../PhraseFrequency.js");
 let {frequencyRank, reRank, alignmentRank, combineRank} = require("../ReRank.js");
+let tf = require('@tensorflow/tfjs')
+tf.setBackend('cpu')
+
 
 let hits = {
   total: 26,
