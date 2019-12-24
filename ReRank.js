@@ -3,7 +3,8 @@ let Helper = require("helper-clockmaker").Helper;
 let debug = require("debug")("ReRank");
 let {computeSemanticScore} = require('./Util.js')
 
-let {sentenceSimilarity, similarityScore} = require("sentence-similarity");
+let sentenceSimilarity = require("sentence-similarity");
+let similarityScore = require('similarity-score')
 let similarity = sentenceSimilarity
 let deepcopy = require("clone");
 

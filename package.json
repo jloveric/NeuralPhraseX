@@ -69,7 +69,8 @@
     "helper-clockmaker": "^1.0.11",
     "neural-sentence-search": "^1.1.0",
     "pos": "^0.4.2",
-    "sentence-similarity": "^1.0.8",
+    "sentence-similarity": "^3.0.0",
+    "similarity-score": "^1.0.0",
     "slot-filler": "^1.0.6"
   }
 }
