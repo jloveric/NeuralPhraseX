@@ -28,7 +28,7 @@ let simpleDatabase = {
       //You can include just simple phrases with no wildcards
       exampleWildcards: { value: ["pig"], ans: ["animal"] },
       phrase: ["What is a (value)?"],
-      response: ["A (value) is an animal."],
+      response: ["A (value) is an (ans)"],
       phraseType: "whatIsThing",
     }, {
       //The wildcards are just examples of what could be put in the slots
